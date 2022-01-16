@@ -1,0 +1,10 @@
+{
+  "name": "Term.ooo passos",
+  "description": "Mostra as palavras utilizadas para chegar ao resultado",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": ["activeTab", "scripting", "clipboardWrite"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

@@ -1,0 +1,214 @@
+<style>
+:root {
+    --max-size: 720px;
+    --kbd-height: min(100em/2.15,25vh);
+    --board-width: min(80em,(100vh - var(--kbd-height) - 12vh - 10vh) * 5/6);
+    --letter-size: calc(var(--board-width)/5.5);
+    --letter-font: calc(var(--letter-size)/1.75);
+    --letter-gap: calc(var(--letter-size)/8);
+}
+
+html {
+    background-color: #6e5c62;
+    font-size: min(var(--max-size)/100,100vw/100);
+    height: 100%;
+    margin: 0 auto;
+    max-width: var(--max-size);
+    overflow: hidden;
+    width: 100%;
+}
+
+body {
+    color: #fafaff;
+    display: flex;
+    flex-direction: column;
+    font-family: Mitr,sans-serif;
+    height: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 100%
+}
+
+main {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 50;
+    justify-content: center;
+    margin: 1vh 0;
+    overflow: auto;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 100%;
+}
+
+#answer-input {
+    background-color: transparent;
+    margin: 30px;
+    border-radius: var(--letter-font);
+    color: white;
+    text-align: center;
+    font-size: var(--letter-font);
+    text-transform: uppercase;
+}
+
+#board {
+    display: grid;
+    flex-grow: 0;
+    gap: var(--letter-gap) 0;
+    max-height: 100%;
+    width: var(--board-width);
+}
+
+.row {
+    display: grid;
+    gap: 0 var(--letter-gap);
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto;
+}
+
+.letter {
+    align-items: center;
+    aspect-ratio: 1;
+    background-color: #615458;
+    border-radius: 10%;
+    box-sizing: border-box;
+    display: inline-block;
+    display: flex;
+    font-size: var(--letter-font);
+    justify-content: center;
+    text-transform: uppercase;
+}
+
+.letter.p {
+    background-color: #d3ad69;
+}
+
+.letter.w {
+    background-color: #312a2c;
+}
+
+.letter.r {
+    background-color: #3aa394;
+}
+</style>
+<main>
+  <input id="answer-input" maxlength="5">
+<div id="board">
+  <div class="row">
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+  </div>
+  <div class="row">
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+  </div>
+  <div class="row">
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+  </div>
+  <div class="row">
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+  </div>
+  <div class="row">
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+  </div>
+  <div class="row">
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+    <div class="letter"></div>
+  </div>
+</div>
+</main>
+<script>
+const parsedUrl = new URL(window.location.href);
+let words = parsedUrl.searchParams.get("q");
+if (words) {
+  words = atob(words);
+  words = words.split(',');
+  applyResultColor(words);
+
+  let answer = getAnswer(words);
+  
+  let answerInput = document.getElementById('answer-input');
+  answerInput.addEventListener('change', (e) => {
+      if (e.target.value.toLowerCase() === answer) {
+        applyResultWord(words);
+      }
+  });
+}
+
+function getAnswer(words) {
+  let answer = '';
+  if (words.length % 10 !== 0) {
+      // Invalid words
+      return answer;
+  }
+  const lastRow = words.slice(words.length - 10);
+  for (let k = 0; k < 5; k++) {
+    answer += lastRow[k * 2];
+  }
+  return answer;
+}
+
+function applyResultColor(words) {
+  if (words.length % 10 !== 0) {
+      // Invalid words
+      return;
+  }
+  const rowCount = words.length / 10;
+  for (let i = 0; i < rowCount; i++) {
+    const row = words.slice(i * 10, i * 10 + 10);
+    for (let k = 0; k < 5; k++) {
+        const state = row[k * 2 + 1];
+        const board = document.getElementById('board');
+        const rowElem = board.children[i];
+        const elem = rowElem.children[k];
+        elem.classList.add(state);
+    }
+  }
+}
+
+function applyResultWord(words) {
+  if (words.length % 10 !== 0) {
+      // Invalid words
+      return;
+  }
+  const rowCount = words.length / 10;
+  for (let i = 0; i < rowCount; i++) {
+    const row = words.slice(i * 10, i * 10 + 10);
+    for (let k = 0; k < 5; k++) {
+        const letter = row[k * 2];
+        const board = document.getElementById('board');
+        const rowElem = board.children[i];
+        const elem = rowElem.children[k];
+        elem.innerHTML = letter;
+        elem.classList.add('flip');
+    }
+  }
+}
+</script>
