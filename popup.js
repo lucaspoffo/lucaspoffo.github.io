@@ -44,11 +44,8 @@ function shareResult() {
   })
 
 
-  
-  console.log(result);
-  console.log(result.toString());
-  console.log(btoa(result.toString()));
-  copyToClipboard(btoa(result.toString()));
+  const url = `https://lucaspoffo.github.io/?q=${btoa(result.toString())}`;
+  copyToClipboard(url);
 
   function copyToClipboard(str) {
     const el = document.createElement('textarea');
