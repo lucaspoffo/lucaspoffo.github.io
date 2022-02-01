@@ -24,6 +24,7 @@ function shareResult() {
   }
 
 
+
   let result = rows.filter(row => {
     const letter = row.children[0];
     return letter.classList.contains("right") ||
@@ -43,8 +44,13 @@ function shareResult() {
     });
   })
 
+  let termo = JSON.parse(localStorage.getItem('termo'));
+  let solution = termo.state.solution;
+  let normSolution = termo.state.normSolution;
 
-  const url = `https://lucaspoffo.github.io/?q=${btoa(result.toString())}`;
+  result = `${result},${solution.split('')},${normSolution.split('')}`;
+
+  const url = `https://lucaspoffo.github.io/?q=${btoa(result.toString())}&v=2`;
   copyToClipboard(url);
 
   function copyToClipboard(str) {

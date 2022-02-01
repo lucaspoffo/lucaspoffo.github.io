@@ -147,16 +147,27 @@ main {
 <script>
 const parsedUrl = new URL(window.location.href);
 let words = parsedUrl.searchParams.get("q");
+let version = parsedUrl.searchParams.get("v");
 if (words) {
   words = atob(words);
   words = words.split(',');
-  applyResultColor(words);
+  let answer = '';
+  let answerNorm = '';
 
-  let answer = getAnswer(words);
+  if (version === '2') {
+    answerNorm = words.splice(words.length - 5, 5).join('');
+    answer = words.splice(words.length - 5, 5).join('');
+    applyResultColor(words);
+  } else {
+    answer = getAnswer(words);
+    answerNorm = getAnswer(words);
+    applyResultColor(words);
+  }
   
   let answerInput = document.getElementById('answer-input');
   answerInput.addEventListener('change', (e) => {
-      if (e.target.value.toLowerCase() === answer) {
+      let value = e.target.value.toLowerCase();
+      if (value === answer || value === answerNorm) {
         applyResultWord(words);
       }
   });
