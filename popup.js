@@ -12,19 +12,7 @@ shareButton.addEventListener("click", async () => {
 function shareResult() {
   let board = document.getElementById("board");
   const rows = [...board.children];
-
-  const isValidBoard = rows.some(row => {
-    const letters = [...row.children];
-    return letters.every(l => l.classList.contains("right"));
-  });
-
-  if (!isValidBoard) {
-    // TODO: show error when board is invalid
-    return;
-  }
-
-
-
+  
   let result = rows.filter(row => {
     const letter = row.children[0];
     return letter.classList.contains("right") ||
